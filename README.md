@@ -65,23 +65,18 @@ pnpm install
 
 3. Set up environment variables:
 
-Create a `.env.local` file and add:
-
 ```bash
-# Supabase (Required for Auth)
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Copy the example file
+cp .env.example .env.local
 
-# Hedera (Optional for now)
-NEXT_PUBLIC_HEDERA_NETWORK=testnet
-NEXT_PUBLIC_HEDERA_ACCOUNT_ID=your_account_id
-HEDERA_PRIVATE_KEY=your_private_key
-
-# App URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+# Edit .env.local with your actual values
 ```
 
-See [Environment Setup Guide](./docs/ENVIRONMENT_SETUP.md) and [Auth Setup Guide](./docs/AUTH_SETUP.md) for detailed instructions.
+**⚠️ Important:** The project uses TWO sets of environment variables:
+- **Next.js App** (`.env.local`): Public variables like Supabase URL, network info
+- **Edge Functions** (Supabase Secrets): Private keys for blockchain operations
+
+See the [**Environment Variables Guide**](./docs/ENVIRONMENT_VARIABLES.md) for detailed setup instructions.
 
 4. Run the development server:
 
