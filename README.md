@@ -73,6 +73,7 @@ cp .env.example .env.local
 ```
 
 **⚠️ Important:** The project uses TWO sets of environment variables:
+
 - **Next.js App** (`.env.local`): Public variables like Supabase URL, network info
 - **Edge Functions** (Supabase Secrets): Private keys for blockchain operations
 
