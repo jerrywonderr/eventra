@@ -18,12 +18,13 @@ Eventra is a next-generation event booking platform that leverages the Hedera Ha
 - 👤 **User Dashboard** - Personalized dashboard for managing events
 - 🎫 Browse and discover events across multiple categories
 - ⚡ Instant ticket booking with secure blockchain verification
-- 🔒 NFT-based tickets with proof of ownership
+- 🔒 **NFT-based tickets** with proof of ownership on Hedera
 - 📱 Mobile-friendly responsive design
 - 🌙 Dark mode support
 - 💳 Cryptocurrency payment integration
 - 🎯 Smart event recommendations
 - 📊 Event organizer dashboard
+- 🔗 **Full Hedera Integration** - NFT minting, transfers, and blockchain operations
 
 ## Tech Stack
 
@@ -134,6 +135,7 @@ Comprehensive guides are available in the `/docs` folder:
 - **[Authentication Setup](./docs/AUTH_SETUP.md)** - Complete auth implementation guide
 - **[Environment Setup](./docs/ENVIRONMENT_SETUP.md)** - Configure Supabase and Hedera
 - **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete codebase overview
+- **[Hedera Integration](./docs/HEDERA_INTEGRATION.md)** - Complete blockchain integration guide
 - **[Contributing Guide](./CONTRIBUTING.md)** - How to contribute to the project
 
 ## Available Components
