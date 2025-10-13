@@ -17,6 +17,10 @@ Eventra requires specific environment variables to connect to the Hedera network
 2. Add the following variables to your `.env.local` file:
 
 ```bash
+# Supabase Configuration (Required for Authentication)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
 # Hedera Network Configuration
 # Options: 'testnet', 'mainnet', 'previewnet'
 NEXT_PUBLIC_HEDERA_NETWORK=testnet
@@ -37,6 +41,45 @@ NEXT_PUBLIC_HEDERA_MIRROR_NODE=https://testnet.mirrornode.hedera.com
 # Optional: WalletConnect Project ID (for wallet integration)
 # NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
 ```
+
+## Getting Supabase Credentials
+
+### 1. Create a Supabase Project
+
+1. Visit [Supabase](https://supabase.com) and sign up for a free account
+2. Click "New Project" to create a new project
+3. Fill in your project details:
+   - **Name**: eventra (or your preferred name)
+   - **Database Password**: Choose a strong password
+   - **Region**: Select the closest region to your users
+4. Wait for the project to be provisioned (this may take a few minutes)
+5. Once ready, navigate to **Settings** → **API**
+6. Copy your **Project URL** and **anon/public key**:
+   - `NEXT_PUBLIC_SUPABASE_URL`: Your project URL (e.g., `https://xxxxx.supabase.co`)
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your anon/public API key
+
+### 2. Configure Supabase Authentication
+
+1. In your Supabase project, go to **Authentication** → **URL Configuration**
+2. Add your site URL:
+   - **Site URL**: `http://localhost:3000` (for development)
+   - For production, use your deployed domain
+3. Add redirect URLs:
+   - `http://localhost:3000/auth/callback`
+   - Add your production URLs when deploying
+4. Configure email templates (optional):
+   - Go to **Authentication** → **Email Templates**
+   - Customize confirmation and password reset emails
+
+### 3. Enable Email Provider
+
+1. Go to **Authentication** → **Providers**
+2. Email provider should be enabled by default
+3. You can also enable additional providers:
+   - Google
+   - GitHub
+   - Discord
+   - And more...
 
 ## Getting Hedera Credentials
 
@@ -104,6 +147,23 @@ Get free testnet HBAR from the faucet:
 3. Request testnet HBAR (up to 10,000 HBAR per day)
 
 ## Environment Variable Details
+
+### `NEXT_PUBLIC_SUPABASE_URL`
+
+- **Type**: String
+- **Description**: Your Supabase project URL
+- **Example**: `https://xxxxxxxxxxxxx.supabase.co`
+- **Required**: Yes
+- **Note**: Find this in your Supabase project settings under API
+
+### `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+- **Type**: String
+- **Description**: Your Supabase anonymous/public API key
+- **Example**: Long base64 encoded string
+- **Required**: Yes
+- **Note**: This key is safe to use in the browser as it enforces Row Level Security (RLS)
+- **Security**: While this is a public key, always use RLS policies to protect your data
 
 ### `NEXT_PUBLIC_HEDERA_NETWORK`
 

@@ -14,6 +14,8 @@ Eventra is a next-generation event booking platform that leverages the Hedera Ha
 
 ## Features
 
+- 🔐 **Secure Authentication** - Email/password auth with Supabase
+- 👤 **User Dashboard** - Personalized dashboard for managing events
 - 🎫 Browse and discover events across multiple categories
 - ⚡ Instant ticket booking with secure blockchain verification
 - 🔒 NFT-based tickets with proof of ownership
@@ -26,9 +28,12 @@ Eventra is a next-generation event booking platform that leverages the Hedera Ha
 ## Tech Stack
 
 - **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS
+- **Backend**: Supabase (Authentication, Database)
+- **State Management**: Zustand
+- **Data Fetching**: React Query (TanStack Query)
 - **Blockchain**: Hedera Hashgraph
 - **Smart Contracts**: Hedera Token Service (HTS), Hedera Smart Contract Service
-- **Authentication**: Hedera wallet integration
+- **Authentication**: Supabase Auth + Hedera wallet integration
 
 ## Getting Started
 
@@ -59,17 +64,23 @@ pnpm install
 
 3. Set up environment variables:
 
+Create a `.env.local` file and add:
+
 ```bash
-cp .env.example .env.local
-```
+# Supabase (Required for Auth)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-Add your Hedera credentials and configuration to `.env.local`:
-
-```
+# Hedera (Optional for now)
 NEXT_PUBLIC_HEDERA_NETWORK=testnet
 NEXT_PUBLIC_HEDERA_ACCOUNT_ID=your_account_id
 HEDERA_PRIVATE_KEY=your_private_key
+
+# App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
+
+See [Environment Setup Guide](./docs/ENVIRONMENT_SETUP.md) and [Auth Setup Guide](./docs/AUTH_SETUP.md) for detailed instructions.
 
 4. Run the development server:
 
@@ -120,7 +131,8 @@ eventra/
 Comprehensive guides are available in the `/docs` folder:
 
 - **[Quick Start Guide](./docs/QUICK_START.md)** - Get started in 5 minutes
-- **[Environment Setup](./docs/ENVIRONMENT_SETUP.md)** - Detailed Hedera configuration guide
+- **[Authentication Setup](./docs/AUTH_SETUP.md)** - Complete auth implementation guide
+- **[Environment Setup](./docs/ENVIRONMENT_SETUP.md)** - Configure Supabase and Hedera
 - **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete codebase overview
 - **[Contributing Guide](./CONTRIBUTING.md)** - How to contribute to the project
 
@@ -130,15 +142,20 @@ Eventra includes pre-built, reusable components:
 
 - **`Button`** - Customizable button with variants and sizes
 - **`EventCard`** - Card component for displaying events
+- **`LoginForm`** - Ready-to-use login form
+- **`SignupForm`** - User registration form
+- **`AuthCard`** - Authentication card wrapper
 
 Example usage:
 
 ```typescript
-import { Button, EventCard } from "@/libs/components";
+import { Button, EventCard, LoginForm } from "@/libs/components";
 
 <Button variant="primary" size="lg">
   Book Now
 </Button>;
+
+<LoginForm />;
 ```
 
 ## Utility Functions

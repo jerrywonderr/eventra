@@ -26,9 +26,22 @@ export default function Home() {
             >
               How It Works
             </a>
-            <button className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-600/30">
+            <a
+              href="/auth/signup"
+              className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-600/30 inline-block"
+            >
               Get Started
-            </button>
+            </a>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <a
+              href="/auth/signup"
+              className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Get Started
+            </a>
           </div>
         </div>
       </nav>
@@ -48,12 +61,18 @@ export default function Home() {
             tickets in seconds with Eventra.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all shadow-xl">
+            <a
+              href="/auth/signup"
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all shadow-xl inline-block"
+            >
               Explore Events
-            </button>
-            <button className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-full font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all border border-slate-200 dark:border-slate-700">
+            </a>
+            <a
+              href="/auth/signup"
+              className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-full font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all border border-slate-200 dark:border-slate-700 inline-block"
+            >
               Create Event
-            </button>
+            </a>
           </div>
         </div>
 
@@ -271,9 +290,12 @@ export default function Home() {
             Join millions of event-goers discovering and booking amazing
             experiences every day
           </p>
-          <button className="px-10 py-4 bg-white text-blue-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all">
+          <a
+            href="/auth/signup"
+            className="px-10 py-4 bg-white text-blue-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all inline-block"
+          >
             Create Your Account
-          </button>
+          </a>
         </div>
       </section>
 
