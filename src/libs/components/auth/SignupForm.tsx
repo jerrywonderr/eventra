@@ -23,7 +23,7 @@ export function SignupForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormData>({
-    resolver: yupResolver(signupSchema) as any,
+    resolver: yupResolver(signupSchema),
     mode: "onBlur",
     defaultValues: {
       fullName: "",
@@ -52,8 +52,12 @@ export function SignupForm() {
       if (error) throw error;
 
       setSuccess(true);
-    } catch (error: any) {
-      setError(error.message || "An error occurred during signup");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An error occurred during signup";
+      setError(errorMessage);
     }
   };
 
@@ -65,7 +69,7 @@ export function SignupForm() {
           Check Your Email
         </h3>
         <p className="text-slate-600 dark:text-slate-300 mb-6">
-          We've sent you a confirmation email. Please click the link in the
+          We&apos;ve sent you a confirmation email. Please click the link in the
           email to verify your account.
         </p>
         <Button variant="outline" onClick={() => router.push("/auth/login")}>

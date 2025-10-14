@@ -55,7 +55,7 @@ serve(async (req) => {
     }
 
     // Parse request body
-    const { userId, email }: CreateAccountRequest = await req.json();
+    const { userId }: CreateAccountRequest = await req.json();
 
     // Verify the user is creating account for themselves
     if (user.id !== userId) {

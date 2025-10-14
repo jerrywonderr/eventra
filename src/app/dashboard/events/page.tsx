@@ -6,7 +6,7 @@ export default function MyEventsPage() {
           My Events
         </h1>
         <p className="text-slate-600 dark:text-slate-300">
-          Manage events you're attending
+          Manage events you&apos;re attending
         </p>
       </div>
 

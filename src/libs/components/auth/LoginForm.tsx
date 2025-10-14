@@ -35,8 +35,12 @@ export function LoginForm() {
 
       router.push("/dashboard");
       router.refresh();
-    } catch (error: any) {
-      setError(error.message || "An error occurred during login");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An error occurred during login";
+      setError(errorMessage);
     }
   };
 

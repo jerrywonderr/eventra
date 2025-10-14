@@ -38,8 +38,10 @@ export default function ForgotPasswordPage() {
       if (error) throw error;
       setSubmittedEmail(data.email);
       setSuccess(true);
-    } catch (error: any) {
-      setError(error.message || "An error occurred");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An error occurred";
+      setError(errorMessage);
     }
   };
 
@@ -66,7 +68,7 @@ export default function ForgotPasswordPage() {
                 Check Your Email
               </h3>
               <p className="text-slate-600 dark:text-slate-300 mb-6">
-                We've sent a password reset link to{" "}
+                We&apos;ve sent a password reset link to{" "}
                 <strong>{submittedEmail}</strong>
               </p>
               <Link href="/auth/login">

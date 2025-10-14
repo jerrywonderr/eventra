@@ -158,7 +158,7 @@ serve(async (req) => {
         .setTokenIds([TokenId.fromString(event.token_id)]);
 
       await associateTx.execute(client);
-    } catch (error) {
+    } catch {
       // Token might already be associated, continue
       console.log("Token association may have failed or already exists");
     }

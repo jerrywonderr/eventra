@@ -144,7 +144,7 @@ export default async function SettingsPage() {
                     Documentation
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Learn how to use Eventra's features
+                    Learn how to use Eventra&apos;s features
                   </p>
                 </div>
                 <a

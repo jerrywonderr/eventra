@@ -169,7 +169,7 @@ export default function Home() {
             Popular Events
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300">
-            Check out what's trending this week
+            Check out what&apos;s trending this week
           </p>
         </div>
 
