@@ -57,7 +57,8 @@ export const signupSchema = yup.object().shape({
     .trim()
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must not exceed 100 characters")
-    .optional(),
+    .notRequired()
+    .default(""),
 });
 
 // Forgot password form validation schema
