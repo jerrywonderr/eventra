@@ -4,7 +4,8 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { hederaClientService } from "../services/hedera-client";
+//import { hederaClientService } from "../services/hedera-client";
+import { hederaClientService } from "../services/hedera-client-mock";
 
 // Query keys for React Query
 export const HEDERA_CLIENT_QUERY_KEYS = {
