@@ -50,3 +50,14 @@ export interface Transaction {
   status: "pending" | "confirmed" | "failed";
   timestamp: string;
 }
+
+export interface TicketTier {
+  id: string;
+  event_id: string;
+  tier_name: 'Regular' | 'VIP' | 'Early Bird';
+  price: number;
+  quantity_total: number;
+  quantity_sold: number;
+  benefits: string[];
+  color_code: string;
+}
