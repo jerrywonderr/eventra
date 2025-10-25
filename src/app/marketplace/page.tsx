@@ -7,6 +7,7 @@ export default async function MarketplacePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+
   const { data: listings } = await supabase
     .from('resale_listings')
     .select(`
@@ -20,8 +21,10 @@ export default async function MarketplacePage() {
         )
       ),
       seller:profiles (
+
         email,
         full_name
+
       )
     `)
     .eq('status', 'active')
@@ -31,6 +34,7 @@ export default async function MarketplacePage() {
     <div className="max-w-7xl mx-auto py-8 px-4">
       <h1 className="text-4xl font-bold mb-8">Ticket Resale Marketplace</h1>
       
+
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
         <p className="text-sm text-blue-800 dark:text-blue-200">
           💡 <strong>How it works:</strong> Buy verified tickets from other attendees. 
@@ -47,6 +51,7 @@ export default async function MarketplacePage() {
           <p className="text-sm text-slate-500 dark:text-slate-500">
             Check back later for resale listings
           </p>
+
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -56,6 +61,7 @@ export default async function MarketplacePage() {
               className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition"
             >
               <div className="h-32 bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center text-white text-5xl">
+
                 🎫
               </div>
               
@@ -66,15 +72,18 @@ export default async function MarketplacePage() {
                   </span>
                 </div>
 
+
                 <h3 className="font-bold text-lg mb-2 text-slate-900 dark:text-white">
                   {listing.ticket?.event?.title}
                 </h3>
                 
                 <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+
                   📍 {listing.ticket?.event?.location}
                 </p>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                   📅 {new Date(listing.ticket?.event?.event_date).toLocaleDateString()}
+
                 </p>
                 
                 <div className="border-t border-slate-200 dark:border-slate-700 pt-4 mb-4">
@@ -93,6 +102,7 @@ export default async function MarketplacePage() {
                     </div>
                   </div>
                 </div>
+
 
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
                   Seller: {listing.seller?.full_name || listing.seller?.email?.split('@')[0] || 'Anonymous'}
@@ -113,6 +123,7 @@ export default async function MarketplacePage() {
                     Login to Purchase
                   </a>
                 )}
+
               </div>
             </div>
           ))}

@@ -17,7 +17,9 @@ export default function CreateEventPage() {
     event_date: '',
     location: '',
     image_url: '',
+
     max_tickets_per_user: null,
+
   });
   
   type Tier = {

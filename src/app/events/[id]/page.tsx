@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import PurchaseButton from './PurchaseButton';
 import type { EventComplete } from '@/libs/types/index';
 
+
 export default async function EventDetailsPage({ 
   params 
 }: { 
@@ -12,6 +13,7 @@ export default async function EventDetailsPage({
 }) {
   const supabase = await createClient();
   const { id } = await params;
+
   
   // Fetch event with tiers
   const { data: event } = await supabase
@@ -20,6 +22,7 @@ export default async function EventDetailsPage({
       *,
       organizer:profiles!events_organizer_id_fkey (
         id,
+
         full_name,
         email,
         verification_badge
@@ -35,6 +38,7 @@ export default async function EventDetailsPage({
       )
     `)
     .eq('id', id)
+
     .single();
 
   if (!event) {
@@ -62,10 +66,12 @@ export default async function EventDetailsPage({
     userTicketCount = count || 0;
   }
 
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       {/* Event Header */}
       <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-8 text-white mb-8">
+
         <h1 className="text-4xl font-bold mb-4">{typedEvent.title}</h1>
         <div className="flex flex-wrap gap-4 text-blue-100">
           <span>📍 {typedEvent.location}</span>
@@ -86,11 +92,14 @@ export default async function EventDetailsPage({
         </div>
       )}
 
+
       {/* Event Description */}
       <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-8">
         <h2 className="text-2xl font-bold mb-4">About This Event</h2>
         <p className="text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
+
           {typedEvent.description || 'No description provided.'}
+
         </p>
       </div>
 
@@ -99,12 +108,14 @@ export default async function EventDetailsPage({
         <h2 className="text-xl font-bold mb-4">Organizer</h2>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+
             {typedEvent.organizer?.full_name?.[0] || typedEvent.organizer?.email?.[0] || 'O'}
           </div>
           <div>
             <p className="font-semibold flex items-center gap-2">
               {typedEvent.organizer?.full_name || typedEvent.organizer?.email}
               {typedEvent.organizer?.verification_badge && (
+
                 <span className="text-blue-600" title="Verified">✓</span>
               )}
             </p>
@@ -142,6 +153,7 @@ export default async function EventDetailsPage({
               ? typedEvent.max_tickets_per_user - userTicketCount 
               : null;
             
+
             return (
               <div
                 key={tier.id}
@@ -167,7 +179,9 @@ export default async function EventDetailsPage({
 
                 {tier.benefits && tier.benefits.length > 0 && (
                   <ul className="space-y-1 mb-4">
+
                     {tier.benefits.map((benefit, idx) => (
+
                       <li key={idx} className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-2">
                         <span className="text-green-600">✓</span>
                         {benefit}
@@ -175,6 +189,7 @@ export default async function EventDetailsPage({
                     ))}
                   </ul>
                 )}
+
 
                 {/* Updated purchase button logic */}
                 {isOrganizer ? (
@@ -186,12 +201,15 @@ export default async function EventDetailsPage({
                 ) : user ? (
                   <PurchaseButton
                     eventId={typedEvent.id}
+
                     tierId={tier.id}
                     tierName={tier.tier_name}
                     price={tier.price}
                     soldOut={soldOut}
+
                     maxPerUser={remainingAllowed}
                     userCurrentTickets={userTicketCount}
+
                   />
                 ) : (
                   <a

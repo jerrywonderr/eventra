@@ -15,11 +15,13 @@ function ListForResaleButton({ ticketId, ticketPrice }: { ticketId: string | num
   );
 }
 
+
 export default async function MyTicketsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
+
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 text-center">
         <p className="text-lg mb-4">Please log in to view your tickets</p>
@@ -31,6 +33,7 @@ export default async function MyTicketsPage() {
   }
 
   // Fetch user's tickets with event and tier details
+
   const { data: tickets } = await supabase
     .from('tickets')
     .select(`
@@ -51,6 +54,7 @@ export default async function MyTicketsPage() {
 
   return (
     <div className="max-w-6xl mx-auto py-8 px-4">
+
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-4xl font-bold">My Tickets</h1>
         <Link 
@@ -64,6 +68,7 @@ export default async function MyTicketsPage() {
       {!tickets || tickets.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 rounded-xl p-12 text-center border border-slate-200 dark:border-slate-700">
           <div className="text-6xl mb-4">🎫</div>
+
           <p className="text-slate-600 dark:text-slate-400 mb-4 text-lg">
             You don`t have any tickets yet
           </p>
@@ -81,6 +86,7 @@ export default async function MyTicketsPage() {
               key={ticket.id}
               className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition"
             >
+
               {/* Ticket Header */}
               <div className="h-40 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-6xl">
                 🎫
@@ -88,12 +94,14 @@ export default async function MyTicketsPage() {
               
               <div className="p-6">
                 {/* Event Info */}
+
                 <h3 className="font-bold text-xl mb-2 text-slate-900 dark:text-white">
                   {ticket.event?.title}
                 </h3>
                 
                 <div className="space-y-2 mb-4">
                   <p className="text-sm text-slate-600 dark:text-slate-400">
+
                     📍 {ticket.event?.location}
                   </p>
                   <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -108,10 +116,12 @@ export default async function MyTicketsPage() {
                 </div>
 
                 {/* Transaction Info */}
+
                 <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 mb-4">
                   <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">
                     Transaction ID
                   </p>
+
                   <p className="text-xs font-mono text-slate-900 dark:text-white break-all">
                     {ticket.transaction_hash}
                   </p>
@@ -136,11 +146,13 @@ export default async function MyTicketsPage() {
                       </p>
                     </>
                   )}
+
                 </div>
 
                 {/* QR Code Placeholder */}
                 <div className="bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-lg p-8 flex items-center justify-center mb-4">
                   <div className="text-center">
+
                     <div className="text-5xl mb-2">📱</div>
                     <p className="text-xs text-slate-600 dark:text-slate-300">
                       Show this at entrance
@@ -153,6 +165,7 @@ export default async function MyTicketsPage() {
                   ticketId={ticket.id}
                   ticketPrice={ticket.purchase_price}
                 />
+
               </div>
             </div>
           ))}

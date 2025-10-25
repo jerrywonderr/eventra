@@ -1,4 +1,3 @@
-// src/app/events/[id]/PurchaseButton.tsx
 
 'use client';
 
@@ -12,8 +11,10 @@ interface Props {
   tierName: string;
   price: number;
   soldOut: boolean;
+
   maxPerUser?: number | null;
   userCurrentTickets?: number;
+
 }
 
 export default function PurchaseButton({ 
@@ -21,6 +22,7 @@ export default function PurchaseButton({
   tierId, 
   tierName, 
   price, 
+
   soldOut,
   maxPerUser,
   userCurrentTickets = 0
@@ -47,12 +49,14 @@ const hasReachedLimit = userCurrentTickets >= limit;
       `Purchase ${quantity} ${tierName} ticket${quantity > 1 ? 's' : ''} for $${totalPrice}?\n\n` +
       'This will be recorded on Hedera blockchain.'
     )) {
+
       return;
     }
 
     setLoading(true);
 
     try {
+
       console.log('Initiating purchase...');
       const result = await purchaseTicket(eventId, tierId, quantity);
 
@@ -76,13 +80,16 @@ const hasReachedLimit = userCurrentTickets >= limit;
       if (viewOnBlockchain && result.explorerUrl) {
         window.open(result.explorerUrl, '_blank');
       }
+
       
       router.push('/my-tickets');
       router.refresh();
 
     } catch (error) {
+
       console.error('Purchase error:', error);
       alert('❌ Purchase failed. Please try again.');
+
     } finally {
       setLoading(false);
     }
@@ -98,6 +105,7 @@ const hasReachedLimit = userCurrentTickets >= limit;
       </button>
     );
   }
+
 
   if (hasReachedLimit) {
     return (
@@ -168,5 +176,6 @@ const hasReachedLimit = userCurrentTickets >= limit;
         )}
       </button>
     </div>
+
   );
 }

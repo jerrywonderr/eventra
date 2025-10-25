@@ -7,7 +7,10 @@ import {
   TokenSupplyType,
   Hbar
 } from '@hashgraph/sdk';
-import client, { operatorId, operatorKey } from '@/libs/hedera/client';
+import { getHederaClient, operatorId, operatorKey } from '@/libs/hedera/client';
+
+// Initialize the Hedera client once
+const client = getHederaClient();
 
 // Define metadata interface
 interface CertificateMetadata {
@@ -32,14 +35,14 @@ export async function createCertificateCollection(
       .setTokenType(TokenType.NonFungibleUnique)
       .setDecimals(0)
       .setInitialSupply(0)
-      .setTreasuryAccountId(operatorId)
+      .setTreasuryAccountId(operatorId!)
       .setSupplyType(TokenSupplyType.Finite)
       .setMaxSupply(1000)
-      .setSupplyKey(operatorKey)
-      .setAdminKey(operatorKey)
+      .setSupplyKey(operatorKey!)
+      .setAdminKey(operatorKey!)
       .setMaxTransactionFee(new Hbar(50))
       .freezeWith(client)
-      .sign(operatorKey);
+      .sign(operatorKey!);
 
     const txResponse = await transaction.execute(client);
     const receipt = await txResponse.getReceipt(client);
@@ -72,7 +75,7 @@ export async function mintCertificate(
       .addMetadata(metadataBytes)
       .setMaxTransactionFee(new Hbar(20))
       .freezeWith(client)
-      .sign(operatorKey);
+      .sign(operatorKey!);
     
     const txResponse = await mintTx.execute(client);
     const receipt = await txResponse.getReceipt(client);

@@ -78,4 +78,5 @@ export interface ResaleListing {
   status: 'active' | 'sold' | 'cancelled';
   listed_at?: string;
   sold_at?: string | null;
+
 }

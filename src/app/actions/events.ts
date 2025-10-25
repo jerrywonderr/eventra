@@ -10,6 +10,7 @@ export async function createEvent(formData: FormData) {
   const supabase = await createClient();
   
   // Check authentication 
+
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
@@ -23,6 +24,7 @@ export async function createEvent(formData: FormData) {
   const location = formData.get('location') as string;
   const image_url = formData.get('image_url') as string;
   const max_tickets_per_user = formData.get('max_tickets_per_user') as string | null;
+
   
   type Tier = {
     tier_name: string;
@@ -36,7 +38,9 @@ export async function createEvent(formData: FormData) {
   const tiers = JSON.parse(tiersJson) as Tier[];
 
   try {
+
     // Insert event
+
     const { data: event, error: eventError } = await supabase
       .from('events')
       .insert({
@@ -49,6 +53,7 @@ export async function createEvent(formData: FormData) {
         is_paid: tiers.some((t: Tier) => t.price > 0),
         is_active: true,
         max_tickets_per_user: max_tickets_per_user ? parseInt(max_tickets_per_user) : null,
+
       })
       .select()
       .single();
@@ -80,9 +85,8 @@ export async function createEvent(formData: FormData) {
     // Revalidate cached pages
     revalidatePath('/dashboard');
     revalidatePath('/events');
-    
     console.log('✅ Event created successfully:', event.id);
-    
+
     // Success - return event ID
     return { success: true, eventId: event.id };
 
@@ -92,11 +96,13 @@ export async function createEvent(formData: FormData) {
   }
 }
 
+
 export async function purchaseTicket(
   eventId: string, 
   tierId: string,
   quantity: number = 1
 ) {
+
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
@@ -107,6 +113,7 @@ export async function purchaseTicket(
 
   try {
     // Get tier info with event details
+
     const { data: tier } = await supabase
       .from('ticket_tiers')
       .select('*, event:events(*)')
@@ -202,13 +209,16 @@ export async function purchaseTicket(
 
     if (ticketError) {
       console.error('Failed to save tickets:', ticketError);
+
       return { error: ticketError.message };
     }
 
     // Update quantity sold
     await supabase
       .from('ticket_tiers')
+
       .update({ quantity_sold: tier.quantity_sold + quantity })
+
       .eq('id', tierId);
 
     revalidatePath('/my-tickets');
@@ -232,6 +242,7 @@ export async function purchaseTicket(
   } catch (error) {
     console.error('Purchase error:', error);
     return { error: 'Failed to purchase ticket: ' + (error as Error).message };
+
   }
 }
 
@@ -274,6 +285,7 @@ export async function listTicketForResale(ticketId: string, resalePrice: number)
       return { error: 'Resale price must be greater than zero' };
     }
 
+
     // Create listing
     const { error } = await supabase
       .from('resale_listings')
@@ -290,9 +302,11 @@ export async function listTicketForResale(ticketId: string, resalePrice: number)
     }
 
     revalidatePath('/marketplace');
+
     revalidatePath('/my-tickets');
     
     console.log('✅ Ticket listed for resale:', ticketId);
+
     
     return { success: true };
 
