@@ -4,12 +4,12 @@
 
 import { createClient } from '@/libs/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { processTicketPurchaseTransaction } from '@/libs/hedera/transactions';
 
 export async function createEvent(formData: FormData) {
   const supabase = await createClient();
   
-  // Check authentication (backend check)
+  // Check authentication 
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
@@ -22,6 +22,7 @@ export async function createEvent(formData: FormData) {
   const event_date = formData.get('event_date') as string;
   const location = formData.get('location') as string;
   const image_url = formData.get('image_url') as string;
+  const max_tickets_per_user = formData.get('max_tickets_per_user') as string | null;
   
   type Tier = {
     tier_name: string;
@@ -35,7 +36,7 @@ export async function createEvent(formData: FormData) {
   const tiers = JSON.parse(tiersJson) as Tier[];
 
   try {
-    // Insert event (backend operation)
+    // Insert event
     const { data: event, error: eventError } = await supabase
       .from('events')
       .insert({
@@ -47,6 +48,7 @@ export async function createEvent(formData: FormData) {
         image_url,
         is_paid: tiers.some((t: Tier) => t.price > 0),
         is_active: true,
+        max_tickets_per_user: max_tickets_per_user ? parseInt(max_tickets_per_user) : null,
       })
       .select()
       .single();
@@ -56,7 +58,7 @@ export async function createEvent(formData: FormData) {
       return { error: eventError.message };
     }
 
-    // Insert ticket tiers (backend operation)
+    // Insert ticket tiers
     const tiersToInsert = tiers.map((tier: Tier) => ({
       event_id: event.id,
       tier_name: tier.tier_name,
@@ -79,6 +81,8 @@ export async function createEvent(formData: FormData) {
     revalidatePath('/dashboard');
     revalidatePath('/events');
     
+    console.log('✅ Event created successfully:', event.id);
+    
     // Success - return event ID
     return { success: true, eventId: event.id };
 
@@ -88,7 +92,11 @@ export async function createEvent(formData: FormData) {
   }
 }
 
-export async function purchaseTicket(eventId: string, tierId: string) {
+export async function purchaseTicket(
+  eventId: string, 
+  tierId: string,
+  quantity: number = 1
+) {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
@@ -98,7 +106,7 @@ export async function purchaseTicket(eventId: string, tierId: string) {
   }
 
   try {
-    // Get tier info
+    // Get tier info with event details
     const { data: tier } = await supabase
       .from('ticket_tiers')
       .select('*, event:events(*)')
@@ -109,43 +117,121 @@ export async function purchaseTicket(eventId: string, tierId: string) {
       return { error: 'Ticket tier not found' };
     }
 
-    // Check availability
-    if (tier.quantity_sold >= tier.quantity_total) {
-      return { error: 'Sold out!' };
+    // ✅ PROTECTION 1: Check if user is the event organizer
+    if (tier.event.organizer_id === user.id) {
+      return { 
+        error: 'Event organizers cannot purchase tickets for their own events. You already have access as the organizer.' 
+      };
     }
 
-    // Create ticket
-    const { data: ticket, error: ticketError } = await supabase
+    // ✅ PROTECTION 2: Check purchase limit per user
+    if (tier.event.max_tickets_per_user !== null) {
+      // Count existing tickets for this user for this event
+      const { count: existingTickets } = await supabase
+        .from('tickets')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', eventId)
+        .eq('buyer_id', user.id);
+
+      const totalAfterPurchase = (existingTickets || 0) + quantity;
+
+      if (totalAfterPurchase > tier.event.max_tickets_per_user) {
+        const remaining = tier.event.max_tickets_per_user - (existingTickets || 0);
+        return { 
+          error: `Purchase limit exceeded. This event allows a maximum of ${tier.event.max_tickets_per_user} ticket(s) per person. You already have ${existingTickets} ticket(s). You can only purchase ${remaining} more.` 
+        };
+      }
+    }
+
+    // Check availability
+    if (tier.quantity_sold + quantity > tier.quantity_total) {
+      const available = tier.quantity_total - tier.quantity_sold;
+      return { 
+        error: `Not enough tickets available! Only ${available} ticket(s) remaining.` 
+      };
+    }
+
+    console.log('🎫 Processing ticket purchase...');
+    console.log('Event:', tier.event.title);
+    console.log('Quantity:', quantity);
+    console.log('Price per ticket:', tier.price);
+    console.log('Total:', tier.price * quantity);
+    console.log('Buyer:', user.email);
+
+    // 🚀 REAL HEDERA BLOCKCHAIN TRANSACTION
+    let hederaResult;
+    try {
+      hederaResult = await processTicketPurchaseTransaction(
+        tier.price * quantity, // Total price
+        eventId,
+        user.email || 'unknown'
+      );
+      
+      console.log('✅ Blockchain transaction successful!');
+      console.log('Transaction ID:', hederaResult.transactionId);
+      console.log('Explorer URL:', hederaResult.explorerUrl);
+      
+    } catch (hederaError) {
+      console.error('❌ Hedera transaction failed:', hederaError);
+      return { 
+        error: `Blockchain transaction failed: ${(hederaError as Error).message}. Please try again.` 
+      };
+    }
+
+    // Create ticket records (one for each quantity)
+    const ticketsToCreate = Array.from({ length: quantity }, (_, i) => ({
+      event_id: eventId,
+      tier_id: tierId,
+      buyer_id: user.id,
+      transaction_hash: hederaResult.transactionId,
+      purchase_price: tier.price,
+      nft_token_id: `HEDERA-${Date.now()}-${i}`,
+      metadata: {
+        blockchain: 'Hedera',
+        network: process.env.NEXT_PUBLIC_HEDERA_NETWORK || 'testnet',
+        explorerUrl: hederaResult.explorerUrl,
+        batchNumber: i + 1,
+        totalInBatch: quantity,
+      }
+    }));
+
+    const { data: tickets, error: ticketError } = await supabase
       .from('tickets')
-      .insert({
-        event_id: eventId,
-        tier_id: tierId,
-        buyer_id: user.id,
-        transaction_hash: `0x${Date.now()}${Math.random().toString(16).substr(2, 8)}`,
-        purchase_price: tier.price,
-        nft_token_id: `NFT-${Date.now()}`,
-      })
-      .select()
-      .single();
+      .insert(ticketsToCreate)
+      .select();
 
     if (ticketError) {
+      console.error('Failed to save tickets:', ticketError);
       return { error: ticketError.message };
     }
 
     // Update quantity sold
     await supabase
       .from('ticket_tiers')
-      .update({ quantity_sold: tier.quantity_sold + 1 })
+      .update({ quantity_sold: tier.quantity_sold + quantity })
       .eq('id', tierId);
 
     revalidatePath('/my-tickets');
     revalidatePath('/dashboard');
+    revalidatePath(`/events/${eventId}`);
     
-    return { success: true, ticket };
+    console.log(`✅ ${quantity} ticket(s) purchased successfully!`);
+    
+    return { 
+      success: true, 
+      tickets,
+      ticket: tickets[0], // For backward compatibility
+      quantity,
+      explorerUrl: hederaResult.explorerUrl,
+      transactionId: hederaResult.transactionId,
+      message: quantity > 1 
+        ? `Successfully purchased ${quantity} tickets!` 
+        : 'Ticket purchased successfully!'
+    };
 
   } catch (error) {
     console.error('Purchase error:', error);
-    return { error: 'Failed to purchase ticket' };
+    return { error: 'Failed to purchase ticket: ' + (error as Error).message };
   }
 }
 
@@ -171,6 +257,23 @@ export async function listTicketForResale(ticketId: string, resalePrice: number)
       return { error: 'Ticket not found or not owned by you' };
     }
 
+    // Check if already listed
+    const { data: existingListing } = await supabase
+      .from('resale_listings')
+      .select('id')
+      .eq('ticket_id', ticketId)
+      .eq('status', 'active')
+      .single();
+
+    if (existingListing) {
+      return { error: 'This ticket is already listed for resale' };
+    }
+
+    // Validate resale price
+    if (resalePrice <= 0) {
+      return { error: 'Resale price must be greater than zero' };
+    }
+
     // Create listing
     const { error } = await supabase
       .from('resale_listings')
@@ -187,6 +290,9 @@ export async function listTicketForResale(ticketId: string, resalePrice: number)
     }
 
     revalidatePath('/marketplace');
+    revalidatePath('/my-tickets');
+    
+    console.log('✅ Ticket listed for resale:', ticketId);
     
     return { success: true };
 

@@ -1,34 +1,40 @@
 // src/libs/hedera/client.ts
 
-import { Client, PrivateKey, AccountId, Hbar } from '@hashgraph/sdk';
+import { Client, AccountId, PrivateKey } from '@hashgraph/sdk';
 
-// Validate environment variables
-if (!process.env.HEDERA_OPERATOR_ID) {
-  throw new Error('HEDERA_OPERATOR_ID environment variable is required');
-}
+let client: Client | null = null;
 
-if (!process.env.HEDERA_OPERATOR_KEY) {
-  throw new Error('HEDERA_OPERATOR_KEY environment variable is required');
-}
+export function getHederaClient(): Client {
+  if (client) {
+    return client;
+  }
 
-// Parse operator account ID and private key
-export const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
-export const operatorKey = PrivateKey.fromString(process.env.HEDERA_OPERATOR_KEY);
+  // Validate environment variables
+  if (!process.env.HEDERA_OPERATOR_ID || !process.env.HEDERA_OPERATOR_KEY) {
+    throw new Error('Hedera credentials not configured. Please set HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY in .env.local');
+  }
 
-// Create and configure Hedera client
-export const client = 
-  process.env.NEXT_PUBLIC_HEDERA_NETWORK === 'mainnet'
+  // Create client based on network
+  client = process.env.NEXT_PUBLIC_HEDERA_NETWORK === 'mainnet'
     ? Client.forMainnet()
     : Client.forTestnet();
 
-// Set operator (the account that pays for transactions)
-client.setOperator(operatorId, operatorKey);
+  // Set operator (your platform account that pays for transactions)
+  const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
+  const operatorKey = PrivateKey.fromString(process.env.HEDERA_OPERATOR_KEY);
 
-// Set default transaction fee using Hbar object
-client.setDefaultMaxTransactionFee(new Hbar(100));
+  client.setOperator(operatorId, operatorKey);
 
-// Optional: Set default query payment
-client.setDefaultMaxQueryPayment(new Hbar(50));
+  return client;
+}
 
-// Default export
-export default client;
+export function getOperatorAccountId(): string {
+  if (!process.env.HEDERA_OPERATOR_ID) {
+    throw new Error('HEDERA_OPERATOR_ID not configured');
+  }
+  return process.env.HEDERA_OPERATOR_ID;
+}
+
+export function getHederaNetwork(): string {
+  return process.env.NEXT_PUBLIC_HEDERA_NETWORK || 'testnet';
+}
