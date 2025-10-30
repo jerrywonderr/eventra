@@ -1,16 +1,16 @@
 // src/app/dashboard/layout.tsx
 
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 // Fallback inline DashboardNav component to avoid missing module error
 function DashboardNav({ user }: { user?: User | null }) {
   return (
     <nav className="bg-white shadow mb-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <div className="text-lg font-semibold">Eventra</div>
-        <div className="text-sm text-gray-600">{user?.email ?? 'Guest'}</div>
+        <div className="text-sm text-gray-600">{user?.email ?? "Guest"}</div>
       </div>
     </nav>
   );
@@ -32,7 +32,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -45,10 +45,12 @@ export default async function DashboardLayout({
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/login');
+    redirect("/auth/login");
   }
 
   return (

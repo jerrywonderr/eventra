@@ -1,5 +1,5 @@
 // src/libs/hedera/client.ts
-import { Client, AccountId, PrivateKey } from '@hashgraph/sdk';
+import { Client, AccountId, PrivateKey } from "@hashgraph/sdk";
 
 let client: Client | null = null;
 
@@ -7,12 +7,13 @@ export function getHederaClient(): Client {
   if (client) return client;
 
   if (!process.env.HEDERA_OPERATOR_ID || !process.env.HEDERA_OPERATOR_KEY) {
-    throw new Error('Hedera credentials not configured.');
+    throw new Error("Hedera credentials not configured.");
   }
 
-  client = process.env.NEXT_PUBLIC_HEDERA_NETWORK === 'mainnet'
-    ? Client.forMainnet()
-    : Client.forTestnet();
+  client =
+    process.env.NEXT_PUBLIC_HEDERA_NETWORK === "mainnet"
+      ? Client.forMainnet()
+      : Client.forTestnet();
 
   const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
   const operatorKey = PrivateKey.fromString(process.env.HEDERA_OPERATOR_KEY);
@@ -31,10 +32,11 @@ export const operatorKey = process.env.HEDERA_OPERATOR_KEY
   : null;
 
 export function getOperatorAccountId(): string {
-  if (!process.env.HEDERA_OPERATOR_ID) throw new Error('HEDERA_OPERATOR_ID not configured');
+  if (!process.env.HEDERA_OPERATOR_ID)
+    throw new Error("HEDERA_OPERATOR_ID not configured");
   return process.env.HEDERA_OPERATOR_ID;
 }
 
 export function getHederaNetwork(): string {
-  return process.env.NEXT_PUBLIC_HEDERA_NETWORK || 'testnet';
+  return process.env.NEXT_PUBLIC_HEDERA_NETWORK || "testnet";
 }

@@ -1,10 +1,10 @@
 // src/app/my-tickets/ListForResaleButton.tsx
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { listTicketForResale } from '@/app/actions/events';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { listTicketForResale } from "@/app/actions/events";
+import { useRouter } from "next/navigation";
 
 interface Props {
   ticketId: string;
@@ -19,7 +19,7 @@ export default function ListForResaleButton({ ticketId, ticketPrice }: Props) {
 
   async function handleList() {
     if (resalePrice <= 0) {
-      alert('Please enter a valid price');
+      alert("Please enter a valid price");
       return;
     }
 
@@ -33,16 +33,15 @@ export default function ListForResaleButton({ ticketId, ticketPrice }: Props) {
       const result = await listTicketForResale(ticketId, resalePrice);
 
       if (result.error) {
-        alert('❌ ' + result.error);
+        alert("❌ " + result.error);
         return;
       }
 
-      alert('✅ Ticket listed for resale successfully!');
+      alert("✅ Ticket listed for resale successfully!");
       setShowForm(false);
       router.refresh();
-
     } catch (error) {
-      alert('Failed to list ticket');
+      alert("Failed to list ticket");
       console.error(error);
     } finally {
       setLoading(false);
@@ -77,14 +76,14 @@ export default function ListForResaleButton({ ticketId, ticketPrice }: Props) {
           Original price: ${ticketPrice}
         </p>
       </div>
-      
+
       <div className="flex gap-2">
         <button
           onClick={handleList}
           disabled={loading}
           className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition font-semibold"
         >
-          {loading ? 'Listing...' : 'Confirm'}
+          {loading ? "Listing..." : "Confirm"}
         </button>
         <button
           onClick={() => setShowForm(false)}

@@ -56,6 +56,7 @@ export interface Ticket {
   transaction_hash?: string | null;
   nft_token_id?: string | null;
   purchase_price: number;
+  image_url?: string | null;
   purchase_date?: string;
   is_used?: boolean;
   metadata?: TicketMetadata;
@@ -75,8 +76,7 @@ export interface ResaleListing {
   seller_id: string;
   original_price: number;
   resale_price: number;
-  status: 'active' | 'sold' | 'cancelled';
+  status: "active" | "sold" | "cancelled";
   listed_at?: string;
   sold_at?: string | null;
-
 }

@@ -1,10 +1,11 @@
 // src/app/events/page.tsx
 
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import Link from "next/link";
+import Image from "next/image";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,6 +19,7 @@ type EventItem = {
   location?: string | null;
   event_date?: string | null;
   is_active?: boolean | null;
+  image_url?: string | null;
   profiles?: {
     full_name?: string | null;
     email?: string | null;
@@ -34,31 +36,35 @@ export default function EventsPage() {
 
   async function loadEvents() {
     const { data } = await supabase
-      .from('events')
-      .select(`
+      .from("events")
+      .select(
+        `
         *,
         profiles!events_organizer_id_fkey (
           full_name,
           email
         )
-      `)
-      .eq('is_active', true)
-      .order('event_date', { ascending: true });
+      `
+      )
+      .eq("is_active", true)
+      .order("event_date", { ascending: true });
 
     setEvents(data || []);
     setLoading(false);
   }
 
   if (loading) {
-    return <div className="flex justify-center py-12">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-    </div>;
+    return (
+      <div className="flex justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
       <h1 className="text-4xl font-bold mb-8">Browse Events</h1>
-      
+
       {events.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg shadow">
           <p className="text-gray-600 mb-4">No events available yet</p>
@@ -74,19 +80,28 @@ export default function EventsPage() {
               href={`/events/${event.id}`}
               className="bg-white rounded-lg shadow hover:shadow-xl transition overflow-hidden"
             >
-              <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-6xl">
-                
+              <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-6xl overflow-hidden relative">
+                {event.image_url ? (
+                  <Image
+                    src={event.image_url}
+                    alt={event.title || "Event"}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <span>🎉</span>
+                )}
               </div>
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-2">{event.title}</h3>
                 <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                  {event.description || 'No description'}
+                  {event.description || "No description"}
                 </p>
-                <p className="text-sm text-gray-500 mb-1">
-                   {event.location}
-                </p>
+                <p className="text-sm text-gray-500 mb-1">{event.location}</p>
                 <p className="text-sm text-gray-500">
-                   {event.event_date ? new Date(event.event_date).toLocaleDateString() : 'TBA'}
+                  {event.event_date
+                    ? new Date(event.event_date).toLocaleDateString()
+                    : "TBA"}
                 </p>
               </div>
             </Link>
