@@ -52,6 +52,12 @@ export function DashboardNav({ user }: DashboardNavProps) {
               My Tickets
             </Link>
             <Link
+              href="/my-certificates"
+              className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              My Certificates
+            </Link>
+            <Link
               href="/dashboard/settings"
               className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >

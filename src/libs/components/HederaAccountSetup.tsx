@@ -28,26 +28,27 @@ export function AccountSetup({ onSetupComplete }: AccountSetupProps) {
   const handleSetup = async () => {
     setIsSettingUp(true);
     setError(null);
-    
+
     try {
       // First verify user is logged in
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
-        setError('Please log in first');
+        setError("Please log in first");
         setIsSettingUp(false);
         return;
       }
 
       // Try to create Hedera account
       await createHederaAccount.mutateAsync();
-      
+
       // Success!
       onSetupComplete?.();
-      
     } catch (err) {
       console.error("Failed to set up Hedera account:", err);
-      setError((err as Error).message || 'Setup failed. Please try again.');
+      setError((err as Error).message || "Setup failed. Please try again.");
     } finally {
       setIsSettingUp(false);
     }
@@ -56,23 +57,24 @@ export function AccountSetup({ onSetupComplete }: AccountSetupProps) {
   const handleSkip = async () => {
     // Auto-create a fake Hedera account and skip
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const fakeAccountId = `0.0.${Math.floor(Math.random() * 9999999)}`;
-      
-      await supabase
-        .from('profiles')
-        .update({ hedera_account_id: fakeAccountId })
-        .eq('id', user.id);
 
-      console.log('✅ Skipped setup with fake account:', fakeAccountId);
-      
+      await supabase
+        .from("profiles")
+        .update({ hedera_account_id: fakeAccountId })
+        .eq("id", user.id);
+
+      console.log("✅ Skipped setup with fake account:", fakeAccountId);
+
       // Refresh the page to update hasAccount status
       window.location.reload();
-      
     } catch (err) {
-      console.error('Skip failed:', err);
+      console.error("Skip failed:", err);
     }
   };
 
@@ -147,25 +149,55 @@ export function AccountSetup({ onSetupComplete }: AccountSetupProps) {
           </p>
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               Secure account creation
             </div>
             <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               Digital ticket ownership
             </div>
             <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               Instant access to all features
             </div>
           </div>
-          
+
           <div className="mt-4 flex gap-3">
             <Button
               onClick={handleSetup}
@@ -175,9 +207,24 @@ export function AccountSetup({ onSetupComplete }: AccountSetupProps) {
             >
               {createHederaAccount.isPending || isSettingUp ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Setting Up Account...
                 </>
@@ -185,7 +232,7 @@ export function AccountSetup({ onSetupComplete }: AccountSetupProps) {
                 "Complete Setup"
               )}
             </Button>
-            
+
             {/* ADD SKIP BUTTON FOR HACKATHON */}
             <Button
               onClick={handleSkip}
@@ -196,7 +243,7 @@ export function AccountSetup({ onSetupComplete }: AccountSetupProps) {
               Skip for Now
             </Button>
           </div>
-          
+
           {(createHederaAccount.error || error) && (
             <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-sm text-red-700 dark:text-red-300">

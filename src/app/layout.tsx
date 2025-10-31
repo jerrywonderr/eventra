@@ -2,6 +2,9 @@ import { Providers } from "@/libs/providers";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from 'next/script';
+import Navbar from "@/components/Navbar";
+import { createClient } from "@/libs/supabase/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,17 +45,38 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  let userPoints = 0;
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('points')
+      .eq('id', user.id)
+      .single();
+    
+    userPoints = profile?.points || 0;
+  }
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Script 
+          src="https://js.paystack.co/v1/inline.js"
+          strategy="beforeInteractive"
+        />
+        <Providers>
+          <Navbar user={user} userPoints={userPoints} />
+          {children}
+        </Providers>
       </body>
     </html>
   );
