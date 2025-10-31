@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Eventra Banner](https://via.placeholder.com/1200x300/4F46E5/ffffff?text=Eventra+-+Fraud-Proof+Ticketing+on+Hedera)
+![Eventra Banner](https://i.imgur.com/YY9ySZn.jpeg)
 
 **Fraud-Proof, Fast, and Fair Event Ticketing on Hedera Hashgraph**
 
@@ -36,25 +36,31 @@
 ## ✨ Key Features
 
 ### 🎫 **Blockchain-Verified Tickets**
+
 Every ticket is an NFT on Hedera blockchain, impossible to duplicate or fake with permanent proof of ownership.
 
 ### 💰 **Dual Payment System**
+
 - **Paystack Integration** - Card/Bank/USSD payments for Web2 users
 - **Hedera (HBAR)** - Direct cryptocurrency payments with lower fees
 
 ### 🎟️ **Tiered Ticketing System**
+
 Multiple ticket tiers per event (VIP, Regular, Early Bird) with different prices and benefits, real-time availability tracking.
 
 ### 💸 **Fair Resale Marketplace**
+
 - Original organizers earn **5% royalty** on every resale
 - Platform takes only **2.5% fee**
 - Sellers keep **92.5%**
 - Blockchain verification prevents fakes
 
 ### 🎓 **NFT Certificates of Participation**
+
 Permanent proof of attendance as NFTs - perfect for conferences, workshops, and networking.
 
 ### ⭐ **Points & Rewards System**
+
 - Earn **10 points per $1** spent
 - **50 bonus points** on first purchase
 - Track transaction history
@@ -62,10 +68,13 @@ Permanent proof of attendance as NFTs - perfect for conferences, workshops, and 
 - Coming soon: Redeem for discounts and perks
 
 ### 🔐 **Organizer Verification**
+
 Two-tier verification system with ID/CAC documents and verification badges for trust and professionalism.
 
 ### 📊 **Event Analytics Dashboard**
+
 Comprehensive analytics for organizers:
+
 - Real-time sales metrics and revenue tracking
 - Ticket tier performance breakdown
 - Recent transaction history with blockchain links
@@ -73,21 +82,27 @@ Comprehensive analytics for organizers:
 - Attendee information and purchase patterns
 
 ### 📧 **Email Notifications**
+
 Automated email system for user engagement:
+
 - **Ticket Purchase Confirmation** - Instant confirmation with blockchain proof
 - **Event Reminders** - Automated reminders 3 days before events
 - **Certificate Notifications** - NFT certificate minting alerts
 - **Welcome Emails** - Onboarding emails for new users
 
 ### 📱 **Social Media Sharing**
+
 Share events across platforms:
+
 - Twitter, Facebook, LinkedIn, WhatsApp integration
 - Copy link functionality
 - Shareable event pages
 - Post-purchase social sharing prompts
 
 ### ⚙️ **Profile & Settings**
+
 Complete account management:
+
 - Update profile information (name, phone)
 - Change password securely
 - View account statistics
@@ -98,6 +113,7 @@ Complete account management:
 ## 🏗️ Tech Stack
 
 ### **Frontend**
+
 - **Framework:** Next.js 15 with App Router & Server Components
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
@@ -105,6 +121,7 @@ Complete account management:
 - **Image Optimization:** Next.js Image with Supabase Storage
 
 ### **Backend**
+
 - **Database:** PostgreSQL via Supabase
 - **Authentication:** Supabase Auth
 - **Storage:** Supabase Storage for event images
@@ -112,6 +129,7 @@ Complete account management:
 - **Real-time:** Supabase Real-time subscriptions
 
 ### **Blockchain**
+
 - **Network:** Hedera Hashgraph (Testnet/Mainnet)
 - **SDK:** Hedera JavaScript SDK
 - **Smart Contracts:** Hedera Token Service (HTS)
@@ -119,11 +137,13 @@ Complete account management:
 - **Explorer:** HashScan integration
 
 ### **Payments**
+
 - **Fiat:** Paystack (Card, Bank Transfer, USSD)
 - **Crypto:** Hedera (HBAR) transactions
 - **Webhooks:** Server-side payment verification
 
 ### **Security**
+
 - Row Level Security (RLS) policies
 - Environment variable protection
 - Server-side validation
@@ -143,12 +163,14 @@ Complete account management:
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/yourusername/eventra.git
 cd eventra
 ```
 
 2. **Install dependencies**
+
 ```bash
 npm install
 ```
@@ -228,7 +250,7 @@ eventra/
 │   │   │   └── certificates.ts       # NFT certificate minting
 │   │   └── types/                    # TypeScript types
 │   └── actions/                      # Server actions
-│  
+│
 ├── public/                           # Static assets
 ├── docs/                             # Documentation
 └── supabase/                         # Supabase configs
@@ -241,27 +263,35 @@ eventra/
 ### Core Tables
 
 **profiles** - User accounts
+
 - `id`, `email`, `full_name`, `phone`, `points`
 
 **events** - Event listings
+
 - `id`, `title`, `description`, `location`, `event_date`, `image_url`, `organizer_id`
 
 **ticket_tiers** - Ticket types per event
+
 - `id`, `event_id`, `tier_name`, `price`, `quantity_total`, `quantity_sold`
 
 **tickets** - Purchased tickets
+
 - `id`, `event_id`, `tier_id`, `buyer_id`, `purchase_price`, `transaction_hash`
 
 **certificates** - NFT participation certificates
+
 - `id`, `event_id`, `recipient_id`, `nft_token_id`, `nft_serial_number`
 
 **points_transactions** - Reward point history
+
 - `id`, `user_id`, `points`, `type`, `description`
 
 **resale_listings** - Ticket resale marketplace
+
 - `id`, `ticket_id`, `seller_id`, `original_price`, `resale_price`, `status`
 
 ### Relationships
+
 - Events belong to organizers (profiles)
 - Tickets link buyers, events, and tiers
 - Certificates link recipients and events
@@ -269,7 +299,7 @@ eventra/
 
 ## 🎥 Demo Video
 
-[Watch the Demo](#) ← *Add your demo video link here*
+[Watch the Demo](#) ← _Add your demo video link here_
 
 ### Demo Credentials (Testnet)
 
@@ -279,6 +309,7 @@ Password: demo123
 ```
 
 **Test Cards (Paystack):**
+
 - Card: `4084084084084081`
 - CVV: `408`
 - Expiry: Any future date
@@ -289,13 +320,13 @@ Password: demo123
 
 ### Why Hedera > Ethereum?
 
-| Feature | Hedera | Ethereum |
-|---------|--------|----------|
-| **Transaction Speed** | 3-5 seconds | 15+ seconds |
-| **Transaction Cost** | $0.0001 | $5-$50 |
-| **Throughput** | 10,000+ TPS | 15-30 TPS |
-| **Energy** | Carbon negative | High |
-| **Finality** | Instant | 15+ seconds |
+| Feature               | Hedera          | Ethereum    |
+| --------------------- | --------------- | ----------- |
+| **Transaction Speed** | 3-5 seconds     | 15+ seconds |
+| **Transaction Cost**  | $0.0001         | $5-$50      |
+| **Throughput**        | 10,000+ TPS     | 15-30 TPS   |
+| **Energy**            | Carbon negative | High        |
+| **Finality**          | Instant         | 15+ seconds |
 
 ### Blockchain Operations
 
@@ -311,6 +342,7 @@ Password: demo123
 ## 💳 Payment Flow
 
 ### Paystack (Web2)
+
 1. User selects payment method
 2. Paystack popup for card/bank/USSD
 3. Webhook verifies payment
@@ -318,6 +350,7 @@ Password: demo123
 5. Ticket created & points awarded
 
 ### Hedera (Web3)
+
 1. User confirms HBAR payment
 2. Direct blockchain transaction
 3. Instant confirmation (3-5 seconds)
@@ -328,6 +361,7 @@ Password: demo123
 ## 🎯 Use Cases
 
 ### For Attendees
+
 - Fraud-proof tickets with blockchain verification
 - Fair resale prices with guaranteed authenticity
 - Earn points on every purchase
@@ -335,6 +369,7 @@ Password: demo123
 - Share events on social media
 
 ### For Organizers
+
 - Only 2.5% platform fee (vs 15-25% competitors)
 - Earn 5% royalties on all ticket resales
 - Verified badge for credibility
@@ -378,6 +413,7 @@ npm start
 ### Environment Variables
 
 Set all environment variables in your deployment platform:
+
 - Vercel: Project Settings → Environment Variables
 - Add all variables from `.env.local`
 
@@ -396,6 +432,7 @@ Set all environment variables in your deployment platform:
 ## 🗺️ Roadmap
 
 ### Phase 1 (Current) ✅
+
 - ✅ Event creation with image upload
 - ✅ Dual payment system (Paystack + Hedera)
 - ✅ Resale marketplace
@@ -403,6 +440,7 @@ Set all environment variables in your deployment platform:
 - ✅ Points & rewards
 
 ### Phase 2 (Q1 2026)
+
 - [ ] Mobile app (React Native)
 - [ ] QR code ticket scanning
 - [ ] Event analytics dashboard
@@ -410,19 +448,12 @@ Set all environment variables in your deployment platform:
 - [ ] Multi-language support
 
 ### Phase 3 (Q2 2026)
+
 - [ ] Points redemption system
 - [ ] Event recommendations AI
 - [ ] Organizer subscription tiers
 - [ ] White-label solutions
 - [ ] API for third-party integrations
-
----
-
-## 👥 Team
-
-- **[Your Name]** - Full Stack Developer & Blockchain Integration
-- **[Team Member 2]** - UI/UX Designer
-- **[Team Member 3]** - Smart Contract Developer
 
 ---
 
@@ -446,9 +477,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Live Demo:** [eventra.vercel.app](#)
 - **Video Demo:** [YouTube](#)
 - **Documentation:** [./docs/](./docs/)
-- **GitHub:** [github.com/yourusername/eventra](https://github.com/yourusername/eventra)
-- **Email:** your.email@example.com
-- **Twitter:** [@eventra](#)
+- **GitHub:** [https://github.com/jerrywonderr/eventra](https://github.com/yourusername/eventra)
+- **Email:** eventraapp@outlook.com
+- **Twitter:** [@eventraApp]
 
 ---
 
