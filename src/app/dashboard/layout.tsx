@@ -8,10 +8,10 @@ import type { User } from "@supabase/supabase-js";
 function DashboardNav({ user }: { user?: User | null }) {
   return (
     <nav className="bg-white shadow mb-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <div className="text-lg font-semibold">Eventra</div>
         <div className="text-sm text-gray-600">{user?.email ?? "Guest"}</div>
-      </div>
+      </div> */}
     </nav>
   );
 }

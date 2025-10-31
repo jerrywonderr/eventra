@@ -88,7 +88,7 @@ export default async function EventDetailsPage({
           url={
             typeof window !== "undefined"
               ? window.location.href
-              : `https://eventra.com/events/${event.id}`
+              : `https://eventra-delta.vercel.app/events/${event.id}`
           }
           hashtags={["Eventra", event.title.replace(/\s+/g, "")]}
         />
@@ -104,12 +104,20 @@ export default async function EventDetailsPage({
               full access and don`t need to purchase tickets.
             </span>
           </p>
-          <Link
-            href={`/dashboard/events/${event.id}/certificates`}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold text-sm"
-          >
-            🎓 Manage Certificates
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href={`/dashboard/events/${event.id}/analytics`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold text-sm"
+            >
+              📊 View Analytics
+            </Link>
+            <Link
+              href={`/dashboard/events/${event.id}/certificates`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold text-sm"
+            >
+              🎓 Manage Certificates
+            </Link>
+          </div>
         </div>
       )}
 

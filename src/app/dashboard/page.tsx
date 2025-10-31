@@ -244,19 +244,26 @@ export default async function DashboardPage() {
           </div>
           <div className="space-y-3">
             {myEvents.map((event) => (
-              <Link
+              <div
                 key={event.id}
-                href={`/events/${event.id}`}
-                className="block p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+                className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition"
               >
-                <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
-                  {event.title}
-                </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  📍 {event.location} • 📅{" "}
-                  {new Date(event.event_date).toLocaleDateString()}
-                </p>
-              </Link>
+                <Link href={`/events/${event.id}`}>
+                  <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
+                    {event.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    📍 {event.location} • 📅{" "}
+                    {new Date(event.event_date).toLocaleDateString()}
+                  </p>
+                </Link>
+                <Link
+                  href={`/dashboard/events/${event.id}/analytics`}
+                  className="text-blue-600 hover:underline text-sm mt-2 inline-block"
+                >
+                  📊 View Analytics
+                </Link>
+              </div>
             ))}
           </div>
         </div>

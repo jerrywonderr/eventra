@@ -7,6 +7,7 @@ import { createClient } from "@/libs/supabase/server";
 import { revalidatePath } from "next/cache";
 import { processTicketPurchaseTransaction } from "@/libs/hedera/transactions";
 import { CertificateMetadata } from "@/libs/hedera/certificates";
+import { sendCertificateMintedEmail } from "@/libs/email/resend";
 
 export async function createEvent(formData: FormData) {
   const supabase = await createClient();
@@ -553,6 +554,22 @@ export async function mintCertificateForAttendee(
     );
 
     console.log("Certificate minted! Serial:", serialNumber);
+    // email notification:
+    try {
+      const network = process.env.NEXT_PUBLIC_HEDERA_NETWORK || "testnet";
+      const certificateUrl = `https://hashscan.io/${network}/token/${event.certificate_token_id}?p=1&k=${serialNumber}`;
+
+      await sendCertificateMintedEmail(attendee.email, {
+        userName: attendee.full_name || attendee.email.split("@")[0],
+        eventTitle: event.title,
+        role: attendeeRole,
+        certificateUrl: certificateUrl,
+      });
+      console.log("✅ Certificate email sent");
+    } catch (emailError) {
+      console.error("Certificate email failed:", emailError);
+      // Don't fail the minting if email fails
+    }
 
     // Save in Supabase
     const { data: certificate, error: certError } = await supabase

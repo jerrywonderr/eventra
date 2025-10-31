@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { processTicketPurchaseTransaction } from "@/libs/hedera/transactions";
+import { sendTicketPurchaseEmail } from "@/libs/email/resend";
 
 export async function POST(request: NextRequest) {
   try {
@@ -120,6 +121,24 @@ export async function POST(request: NextRequest) {
         .eq("id", tierId);
 
       console.log(`✅ ${quantity} ticket(s) created successfully!`);
+      // Send email notification
+      try {
+        await sendTicketPurchaseEmail(
+          userId, // buyer's email
+          {
+            userName: "Customer", // Get from profile
+            eventTitle: tier.event.title,
+            eventDate: new Date(tier.event.event_date).toLocaleDateString(),
+            eventLocation: tier.event.location,
+            ticketCount: quantity,
+            totalPrice: tier.price * quantity,
+            transactionId: hederaResult.transactionId,
+            explorerUrl: hederaResult.explorerUrl,
+          }
+        );
+      } catch (emailError) {
+        console.error("Email send failed:", emailError);
+      }
 
       // ✨ Award points for purchase
       const totalSpent = tier.price * quantity;

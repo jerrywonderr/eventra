@@ -1,4 +1,18 @@
-export default function Home() {
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+export default async function Home() {
+  const { data: events } = await supabase
+    .from("events")
+    .select("id, title, description, event_date, location, image_url")
+    .eq("is_active", true)
+    .order("event_date", { ascending: true })
+    .limit(5);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Hero Section */}
